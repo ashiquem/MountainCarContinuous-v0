@@ -41,12 +41,12 @@ class Actor():
 
         # Define output layers
         raw_actions = layers.Dense(units=self.action_size,activation='sigmoid',
-            name='raw_actions')(net)
+            name='raw_actions',kernel_initializer=layers.initializers.RandomUniform(minval=-0.003, maxval=0.003))(net)
 
         # Scale raw actions to action space range
 
         actions = layers.Lambda(lambda x: (x*self.action_range)+self.action_low,
-            name='actions',kernel_initializer=layers.initializers.RandomUniform(minval=-0.003, maxval=0.003))(raw_actions)
+            name='actions')(raw_actions)
 
         # Create Keras model
 
