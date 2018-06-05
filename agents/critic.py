@@ -32,14 +32,15 @@ class Critic():
         net_states = layers.Dense(units=300, kernel_regularizer=layers.regularizers.l2(1e-6))(net_states)
 
         # Add hidden layer(s) for action pathway
-        net_actions = layers.Dense(units=300,kernel_regularizer=layers.regularizers.l2(1e-6))(actions)
-
+        net_actions = layers.Dense(units=400,kernel_regularizer=layers.regularizers.l2(1e-6))(actions)
+        net_actions = layers.Dense(units=300,kernel_regularizer=layers.regularizers.l2(1e-6))(net_actions)
         # Combine state and action pathways
         net = layers.Add()([net_states, net_actions])
         net = layers.Activation('relu')(net)
 
         # Add final output layer to prduce action values (Q values)
-        Q_values = layers.Dense(units=1, name='q_values',kernel_initializer=layers.initializers.RandomUniform(minval=-0.003, maxval=0.003))(net)
+        Q_values = layers.Dense(units=1, name='q_values',kernel_regularizer=layers.regularizers.l2(0.01),
+        kernel_initializer=layers.initializers.RandomUniform(minval=-0.003, maxval=0.003))(net)
 
         # Create Keras model
         self.model = models.Model(inputs=[states, actions], outputs=Q_values)
